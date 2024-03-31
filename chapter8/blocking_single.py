@@ -9,7 +9,7 @@ import socket
 def handle_conn(conn, addr, handlers):
     print addr, "comes"
     while True:  # 循环读写
-        length_prefix = conn.recv(4)  # 请求长度前缀
+        length_prefix = conn.recv(4)  # 请求长度前缀，我有个疑问为什么设置 buffersize 为4？
         if not length_prefix:  # 连接关闭了
             print addr, "bye"
             conn.close()
@@ -31,7 +31,7 @@ def loop(sock, handlers):
 
 
 def ping(conn, params):
-    send_result(conn, "pong", params)
+    send_result(conn, "pong", params)  # 服务器端收到"ping"回复"pong"
 
 
 def send_result(conn, out, result):
@@ -44,9 +44,36 @@ def send_result(conn, out, result):
 if __name__ == '__main__':
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # 创建一个TCP套接字
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # 打开reuse addr选项
-    sock.bind(("localhost", 8080)) # 绑定端口
+    sock.bind(("localhost", 8080))  # 绑定服务端对外端口
     sock.listen(1)  # 监听客户端连接
     handlers = {  # 注册请求处理器
         "ping": ping
     }
     loop(sock, handlers)  # 进入服务循环
+
+# output
+# (.venv) Franks-Mac:chapter8 frank$ python blocking_single.py
+# ('127.0.0.1', 53589) comes  # 53589应该是客户端的端口号
+# ping ireader 0
+# ping ireader 1
+# ping ireader 2
+# ping ireader 3
+# ping ireader 4
+# ping ireader 5
+# ping ireader 6
+# ping ireader 7
+# ping ireader 8
+# ping ireader 9
+# ('127.0.0.1', 53589) bye
+# ('127.0.0.1', 53601) comes
+# ping ireader 0
+# ping ireader 1
+# ping ireader 2
+# ping ireader 3
+# ping ireader 4
+# ping ireader 5
+# ping ireader 6
+# ping ireader 7
+# ping ireader 8
+# ping ireader 9
+# ('127.0.0.1', 53601) bye
