@@ -26,3 +26,16 @@ if __name__ == '__main__':
         print out, result
         time.sleep(1)  # 休眠1s，便于观察
     s.close()  # 关闭连接
+
+# output 同时开两个terminal执行
+# (.venv) Franks-Mac:chapter8 frank$ python client.py
+# pong ireader 0
+# pong ireader 1
+# pong ireader 2
+# pong ireader 3
+# pong ireader 4
+# pong ireader 5
+# pong ireader 6
+# pong ireader 7
+# pong ireader 8
+# pong ireader 9

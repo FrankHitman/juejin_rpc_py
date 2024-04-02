@@ -5,6 +5,7 @@ import os
 import json
 import struct
 import socket
+import thread
 
 
 def handle_conn(conn, addr, handlers):
@@ -28,7 +29,7 @@ def handle_conn(conn, addr, handlers):
 def loop(sock, handlers):
     while True:
         conn, addr = sock.accept()
-        handle_conn(conn, addr, handlers)
+        thread.start_new_thread(handle_conn, (conn, addr, handlers))
 
 
 def ping(conn, params):
@@ -65,8 +66,8 @@ if __name__ == '__main__':
     loop(sock, handlers)
 
 # output
-# (.venv) Franks-Mac:chapter11 frank$ python prefork.py
-# ('127.0.0.1', 63763) comes
+# (.venv) Franks-Mac:chapter11 frank$ python prefork_multithread.py
+# ('127.0.0.1', 64228) comes
 # ping ireader 0
 # ping ireader 1
 # ping ireader 2
@@ -75,120 +76,107 @@ if __name__ == '__main__':
 # ping ireader 5
 # ping ireader 6
 # ping ireader 7
-# ping ireader 8
-# ping ireader 9
-# ('127.0.0.1', 63763) bye
-# ('127.0.0.1', 63767) comes
+# ('127.0.0.1', 64233) comes
 # ping ireader 0
+# ping ireader 8
 # ping ireader 1
+# ping ireader 9
 # ping ireader 2
+# ('127.0.0.1', 64228) bye
 # ping ireader 3
 # ping ireader 4
-# ('127.0.0.1', 63768) comes
-# ping ireader 0
 # ping ireader 5
-# ping ireader 1
-# ping ireader 6
-# ping ireader 2
-# ping ireader 7
-# ping ireader 3
-# ping ireader 8
-# ping ireader 4
-# ping ireader 9
-# ping ireader 5
-# ('127.0.0.1', 63767) bye
 # ping ireader 6
 # ping ireader 7
 # ping ireader 8
 # ping ireader 9
-# ('127.0.0.1', 63768) bye
+# ('127.0.0.1', 64233) bye
 # ^CTraceback (most recent call last):
-#   File "prefork.py", line 65, in <module>
 # Traceback (most recent call last):
-#   File "prefork.py", line 65, in <module>
 # Traceback (most recent call last):
-#   File "prefork.py", line 65, in <module>
+# Traceback (most recent call last):
+#   File "prefork_multithread.py", line 66, in <module>
+#   File "prefork_multithread.py", line 66, in <module>
+#   File "prefork_multithread.py", line 66, in <module>
+#   File "prefork_multithread.py", line 66, in <module>
 #     loop(sock, handlers)
-#   File "prefork.py", line 30, in loop
+#   File "prefork_multithread.py", line 31, in loop
+#     loop(sock, handlers)
+#   File "prefork_multithread.py", line 31, in loop
+#     loop(sock, handlers)
+#   File "prefork_multithread.py", line 31, in loop
+#     loop(sock, handlers)
+#     conn, addr = sock.accept()
+#   File "prefork_multithread.py", line 31, in loop
+#   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
+#     conn, addr = sock.accept()
+# Traceback (most recent call last):
+#   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
+#   File "prefork_multithread.py", line 66, in <module>
 #     conn, addr = sock.accept()
 #   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
 #     loop(sock, handlers)
-#   File "prefork.py", line 30, in loop
-#         loop(sock, handlers)
-# conn, addr = sock.accept()
+# Traceback (most recent call last):
+#   File "prefork_multithread.py", line 31, in loop
+#   File "prefork_multithread.py", line 66, in <module>
+# Traceback (most recent call last):
+#   File "prefork_multithread.py", line 66, in <module>
+#     sock, addr = self._sock.accept()
+#         conn, addr = sock.accept()
+# sock, addr = self._sock.accept()
 #   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
-#   File "prefork.py", line 30, in loop
-#     conn, addr = sock.accept()
-#   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
-# Traceback (most recent call last):
-#   File "prefork.py", line 65, in <module>
-# Traceback (most recent call last):
-#   File "prefork.py", line 65, in <module>
-# Traceback (most recent call last):
-#   File "prefork.py", line 65, in <module>
+#     sock, addr = self._sock.accept()
 #     loop(sock, handlers)
-#   File "prefork.py", line 30, in loop
+#   File "prefork_multithread.py", line 31, in loop
 # Traceback (most recent call last):
-#   File "prefork.py", line 65, in <module>
-# Traceback (most recent call last):
-#     loop(sock, handlers)
-#     conn, addr = sock.accept()
-#   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
-#   File "prefork.py", line 30, in loop
-#     loop(sock, handlers)
-#   File "prefork.py", line 30, in loop
-#     loop(sock, handlers)
-#     conn, addr = sock.accept()
-#   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
-#   File "prefork.py", line 30, in loop
-#     conn, addr = sock.accept()
-#   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
-#     conn, addr = sock.accept()
-#   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
-#   File "prefork.py", line 65, in <module>
-# Traceback (most recent call last):
-#   File "prefork.py", line 65, in <module>
-# Traceback (most recent call last):
-#   File "prefork.py", line 65, in <module>
-#     Traceback (most recent call last):
+#     KeyboardInterrupt  File "prefork_multithread.py", line 66, in <module>
+#
 # loop(sock, handlers)
-#   File "prefork.py", line 65, in <module>
-#     loop(sock, handlers)
-#       File "prefork.py", line 30, in loop
 # sock, addr = self._sock.accept()
-#     conn, addr = sock.accept()
-#   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
-#     sock, addr = self._sock.accept()
-#   File "prefork.py", line 30, in loop
-#     sock, addr = self._sock.accept()
-# KeyboardInterrupt
-#     conn, addr = sock.accept()
-#   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
-# KeyboardInterrupt
-#     sock, addr = self._sock.accept()
-#     loop(sock, handlers)
-# KeyboardInterrupt
-#   File "prefork.py", line 30, in loop
-#     sock, addr     = self._sock.accept()
-#         loop(sock, handlers)
-# sock, addr = self._sock.accept()
-#   File "prefork.py", line 30, in loop
-#     conn, addr = sock.accept()
-#   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
+#   File "prefork_multithread.py", line 31, in loop
 # KeyboardInterruptKeyboardInterrupt
 #
-#     sock, addr = self._sock.accept()
-# sock, addr = self._sock.accept()
 # KeyboardInterrupt
-# KeyboardInterrupt
-#     sock, addr = self._sock.accept()
-# KeyboardInterrupt
-#     KeyboardInterruptsock, addr = self._sock.accept()
+#     conn, addr = sock.accept()
+#     loop(sock, handlers)
+#   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
+#   File "prefork_multithread.py", line 31, in loop
 #     conn, addr = sock.accept()
 #   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
-# KeyboardInterrupt
+#     sock, addr = self._sock.accept()
 #     sock, addr = self._sock.accept()
 # KeyboardInterrupt
+# KeyboardInterrupt
+# Traceback (most recent call last):
+#   File "prefork_multithread.py", line 66, in <module>
+#     conn, addr = sock.accept()
+#   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
+#     sock, addr = self._sock.accept()
+# KeyboardInterrupt
+# Traceback (most recent call last):
+#   File "prefork_multithread.py", line 66, in <module>
+#         loop(sock, handlers)
+# loop(sock, handlers)
+#   File "prefork_multithread.py", line 31, in loop
+#   File "prefork_multithread.py", line 31, in loop
+#     conn, addr = sock.accept()
+#       File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
+# conn, addr = sock.accept()
+#   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
+#     sock, addr = self._sock.accept()
+#     sock, addr = self._sock.accept()
+# KeyboardInterrupt
+# Traceback (most recent call last):
+#   File "prefork_multithread.py", line 66, in <module>
+# conn, addr = sock.accept()
+#   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
+#     loop(sock, handlers)
+#   File "prefork_multithread.py", line 31, in loop
+#     conn, addr = sock.accept()
+#   File "/Users/frank/.pyenv/versions/2.7.18/lib/python2.7/socket.py", line 206, in accept
+#     sock, addr = self._sock.KeyboardInterrupt
+# accept()
+#     sock, addr = self._sock.accept()
+# KeyboardInterruptKeyboardInterrupt
 #
 # (.venv) Franks-Mac:chapter11 frank$
-# 从上面的 ctrl+c 强制退出的错误中可以看出，退出socket报错有11个，那么说明父进程也参与了监听。
