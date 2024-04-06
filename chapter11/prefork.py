@@ -10,6 +10,7 @@ import socket
 def handle_conn(conn, addr, handlers):
     print addr, "comes"
     while True:
+        print 'process ', str(os.getpid()), ' is going to handle request'
         length_prefix = conn.recv(4)
         if not length_prefix:
             print addr, "bye"
@@ -23,6 +24,7 @@ def handle_conn(conn, addr, handlers):
         print in_, params
         handler = handlers[in_]
         handler(conn, params)
+        print 'process ', str(os.getpid()), ' has handled the request'
 
 
 def loop(sock, handlers):
@@ -48,8 +50,10 @@ def prefork(n):
         if pid < 0:  # fork error
             return
         if pid > 0:  # parent process
+            print 'parent process pid number is ', str(os.getpid())
             continue
         if pid == 0:
+            print 'child process pid number is ', str(os.getpid())
             break  # child process
 
 
@@ -58,7 +62,7 @@ if __name__ == '__main__':
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind(("localhost", 8080))
     sock.listen(1)
-    prefork(10)  # 好戏在这里，开启了10个子进程
+    prefork(2)  # 好戏在这里，开启了10个子进程
     handlers = {
         "ping": ping
     }
@@ -192,3 +196,234 @@ if __name__ == '__main__':
 #
 # (.venv) Franks-Mac:chapter11 frank$
 # 从上面的 ctrl+c 强制退出的错误中可以看出，退出socket报错有11个，那么说明父进程也参与了监听。
+
+# output 添加了打印 pid 之后的日志
+# (.venv) Franks-Mac:chapter11 frank$ python prefork.py
+# parent process pid number is  30692
+# parent process pid number is  30692
+# child process pid number is  30693
+# parent process pid number is  30692
+# child process pid number is  30694
+# parent process pid number is  30692
+# child process pid number is  30695
+# parent process pid number is  30692
+# child process pid number is  30696
+# parent process pid number is  30692
+# child process pid number is  30697
+# parent process pid number is  30692
+# child process pid number is  30698
+# parent process pid number is  30692
+# child process pid number is  30699
+# parent process pid number is  30692
+# child process pid number is  30700
+# parent process pid number is  30692
+# child process pid number is  30701
+# child process pid number is  30702
+# ('127.0.0.1', 51225) comes
+# process  30693  is going to handle request
+# ping ireader 0
+# process  30693  has handled the request
+# process  30693  is going to handle request
+# ping ireader 1
+# process  30693  has handled the request
+# process  30693  is going to handle request
+# ping ireader 2
+# process  30693  has handled the request
+# process  30693  is going to handle request
+# ping ireader 3
+# process  30693  has handled the request
+# process  30693  is going to handle request
+# ping ireader 4
+# process  30693  has handled the request
+# process  30693  is going to handle request
+# ping ireader 5
+# process  30693  has handled the request
+# process  30693  is going to handle request
+# ping ireader 6
+# process  30693  has handled the request
+# process  30693  is going to handle request
+# ping ireader 7
+# process  30693  has handled the request
+# process  30693  is going to handle request
+# ping ireader 8
+# process  30693  has handled the request
+# process  30693  is going to handle request
+# ping ireader 9
+# process  30693  has handled the request
+# process  30693  is going to handle request
+# ('127.0.0.1', 51225) bye
+# ('127.0.0.1', 51233) comes
+# process  30694  is going to handle request
+# ping ireader 0
+# process  30694  has handled the request
+# process  30694  is going to handle request
+# ping ireader 1
+# process  30694  has handled the request
+# process  30694  is going to handle request
+# ping ireader 2
+# process  30694  has handled the request
+# process  30694  is going to handle request
+# ping ireader 3
+# process  30694  has handled the request
+# process  30694  is going to handle request
+# ping ireader 4
+# process  30694  has handled the request
+# process  30694  is going to handle request
+# ping ireader 5
+# process  30694  has handled the request
+# process  30694  is going to handle request
+# ping ireader 6
+# process  30694  has handled the request
+# process  30694  is going to handle request
+# ping ireader 7
+# process  30694  has handled the request
+# process  30694  is going to handle request
+# ping ireader 8
+# process  30694  has handled the request
+# process  30694  is going to handle request
+# ('127.0.0.1', 51234) comes
+# process  30695  is going to handle request
+# ping ireader 0
+# process  30695  has handled the request
+# process  30695  is going to handle request
+# ping ireader 9
+# process  30694  has handled the request
+# process  30694  is going to handle request
+# ping ireader 1
+# process  30695  has handled the request
+# process  30695  is going to handle request
+# ('127.0.0.1', 51233) bye
+# ping ireader 2
+# process  30695  has handled the request
+# process  30695  is going to handle request
+# ping ireader 3
+# process  30695  has handled the request
+# process  30695  is going to handle request
+# ('127.0.0.1', 51235) comes
+# process  30696  is going to handle request
+# ping ireader 0
+# process  30696  has handled the request
+# process  30696  is going to handle request
+# ping ireader 4
+# process  30695  has handled the request
+# process  30695  is going to handle request
+# ping ireader 1
+# process  30696  has handled the request
+# process  30696  is going to handle request
+# ping ireader 5
+# process  30695  has handled the request
+# process  30695  is going to handle request
+# ping ireader 2
+# process  30696  has handled the request
+# process  30696  is going to handle request
+# ping ireader 6
+# process  30695  has handled the request
+# process  30695  is going to handle request
+# ping ireader 3
+# process  30696  has handled the request
+# process  30696  is going to handle request
+# ping ireader 7
+# process  30695  has handled the request
+# process  30695  is going to handle request
+# ping ireader 4
+# process  30696  has handled the request
+# process  30696  is going to handle request
+# ping ireader 8
+# process  30695  has handled the request
+# process  30695  is going to handle request
+# ping ireader 5
+# process  30696  has handled the request
+# process  30696  is going to handle request
+# ping ireader 9
+# process  30695  has handled the request
+# process  30695  is going to handle request
+# ping ireader 6
+# process  30696  has handled the request
+# process  30696  is going to handle request
+# ('127.0.0.1', 51234) bye
+# ping ireader 7
+# process  30696  has handled the request
+# process  30696  is going to handle request
+# ping ireader 8
+# process  30696  has handled the request
+# process  30696  is going to handle request
+# ping ireader 9
+# process  30696  has handled the request
+# process  30696  is going to handle request
+# ('127.0.0.1', 51235) bye
+
+# 从上面的日志可以看出父进程没有参与处理客户端发来的请求，子进程创建太多，没有充分利用。把子进程从 10 个 改为 2 个试试
+
+# output of prefork(10) -> prefork(2)
+# (.venv) Franks-Mac:chapter11 frank$ python prefork.py
+# parent process pid number is  30809
+# parent process pid number is  30809
+# child process pid number is  30810
+# child process pid number is  30811
+# ('127.0.0.1', 51284) comes
+# process  30809  is going to handle request
+# ping ireader 0
+# process  30809  has handled the request
+# process  30809  is going to handle request
+# ping ireader 1
+# process  30809  has handled the request
+# process  30809  is going to handle request
+# ping ireader 2
+# process  30809  has handled the request
+# process  30809  is going to handle request
+# ('127.0.0.1', 51285) comes
+# process  30810  is going to handle request
+# ping ireader 0
+# process  30810  has handled the request
+# process  30810  is going to handle request
+# ping ireader 3
+# process  30809  has handled the request
+# process  30809  is going to handle request
+# ping ireader 1
+# process  30810  has handled the request
+# process  30810  is going to handle request
+# ping ireader 4
+# process  30809  has handled the request
+# process  30809  is going to handle request
+# ping ireader 2
+# process  30810  has handled the request
+# process  30810  is going to handle request
+# ping ireader 5
+# process  30809  has handled the request
+# process  30809  is going to handle request
+# ping ireader 3
+# process  30810  has handled the request
+# process  30810  is going to handle request
+# ping ireader 6
+# process  30809  has handled the request
+# process  30809  is going to handle request
+# ping ireader 4
+# process  30810  has handled the request
+# process  30810  is going to handle request
+# ping ireader 7
+# process  30809  has handled the request
+# process  30809  is going to handle request
+# ping ireader 5
+# process  30810  has handled the request
+# process  30810  is going to handle request
+# ping ireader 8
+# process  30809  has handled the request
+# process  30809  is going to handle request
+# ping ireader 6
+# process  30810  has handled the request
+# process  30810  is going to handle request
+# ping ireader 9
+# process  30809  has handled the request
+# process  30809  is going to handle request
+# ping ireader 7
+# process  30810  has handled the request
+# process  30810  is going to handle request
+# ('127.0.0.1', 51284) bye
+# ping ireader 8
+# process  30810  has handled the request
+# process  30810  is going to handle request
+# ping ireader 9
+# process  30810  has handled the request
+# process  30810  is going to handle request
+# ('127.0.0.1', 51285) bye
+# 从上面可以看出 父进程 30809 确实参与到了处理 socket 的消息。
