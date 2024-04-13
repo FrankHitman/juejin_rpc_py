@@ -8,7 +8,7 @@
 消息前缀存储着消息体的长度。
 
 因为 struct.pack方法返回的就是4个字节的长度的字符串
-```commandline
+```python
 value_in_bytes = struct.pack("I", 1024)  # 将一个整数编码成 4 个字节的字符串
 value, = struct.unpack("I", value_in_bytes)  # 将一个 4 字节的字符串解码成一个整数
 ```
