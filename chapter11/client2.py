@@ -80,5 +80,3 @@ if __name__ == "__main__":
 # HTTP/1.1 200 OK
 #
 # Hello, World!
-
-# refer to http://www.geminitalk.cn:8021/r?q=24510472364076824

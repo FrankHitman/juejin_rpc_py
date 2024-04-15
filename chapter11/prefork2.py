@@ -221,6 +221,4 @@ if __name__ == "__main__":
 # KeyboardInterrupt
 # (.venv) Franks-Mac:chapter11 frank$
 
-# 以上代码出自 ChatGPT，子进程设置为3，只在子进程中处理 socket。 自始至终子进程的 pid 没有变，说明子进程没有重新创建，资源没有浪费
-# refer to http://www.geminitalk.cn:8021/r?q=24510474780451479 and
-# http://www.geminitalk.cn:8021/r?q=24510489431979507
+# 以上代码出自 Gemini，子进程设置为3，只在子进程中处理 socket。 自始至终子进程的 pid 没有变，说明子进程没有重新创建，资源没有浪费

@@ -62,7 +62,7 @@ for pid in pid_list:
 
 看着父进程与子进程应该都会处理，并没有特殊处理。从强制退出 prefork.py 进程的错误信息中也可以看出来，参见[prefork.py](prefork.py)
 
-## Prefork plus multithread
+## PreFork plus multithread
 如果并行的连接数超过了 prefork 进程的数量，那么后来的客户端请求将会阻塞，因为正在处理连接的子进程是没有机会去调用 accept 来获取新连接的。
 为了不阻塞新的客户端，我们可以将子进程的单线程同步模型改成多线程同步模型即可。
 
