@@ -143,4 +143,10 @@ _get_ident = thread.get_ident
 ThreadError = thread.error
 del thread
 ```
+勘误，其实 thread.py 是 Pycharm 生成的，底层是 cPython， 方法内容都是 pass。
+
+refer to
+- [why-do-some-built-in-python-functions-only-have-pass](https://stackoverflow.com/questions/38384206/why-do-some-built-in-python-functions-only-have-pass)
+- [Chapter 12](../chapter12/readme.md)
+
 

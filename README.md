@@ -36,7 +36,7 @@ virtualenv .venv
 source .venv/bin/activate
 ```
 
-From chapter 14, it is required to use Python 3.5+
+For chapter 14, it is required to use Python 3.5+
 
 Install Python 3.12.2 on MacOS 13
 ```
