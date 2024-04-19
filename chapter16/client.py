@@ -119,13 +119,3 @@ if __name__ == '__main__':
         except Exception, ex:
             server.close()  # 遇到错误，关闭连接
             print ex
-        server = random_server()
-        if not server:
-            break  # 如果没有节点存活，就退出
-        time.sleep(0.5)
-        try:
-            out, result = server.pi(i)
-            print server.addr, out, result
-        except Exception, ex:
-            server.close()  # 遇到错误，关闭连接
-            print ex
