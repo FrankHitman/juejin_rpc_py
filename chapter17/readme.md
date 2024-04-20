@@ -1,4 +1,4 @@
-# Chapter 16 Notes
+# Chapter 17 Notes
 
 ## Environment preparation
 
@@ -936,6 +936,36 @@ a deadlock. The _acquire_restore and _release_save functions play a crucial role
 lock during these reentrant operations.
 
 以上 GPT 解释 还有有点问题 源码中没有调用 _set_ident() 和 _get_ident() 的情况。
+
+## 小册内容
+### 架构图
+![structure](structure.jpg)
+#### 服务端 server
+- 实现出一个 PreForking 异步模型的单机 RPC 服务器；
+- 然后将服务挂接到 ZooKeeper 的树节点上；
+- 再编写客户端消费者从 ZooKeeper 中读取服务节点地址，连接 RPC 服务器进行交互；
+- 同时还要监听 ZooKeeper 树节点的变更，在 RPC 服务器节点变动时能动态调整服务列表地址。
+- 单机服务器的内容会比之前要复杂一些，因为要考虑周全，对子进程进行管理，要处理信号监听和子进程收割等，这也是对上节理论内容的实战开发应用。
+
+
+##### 父进程与子进程的协同
+异步多进程服务共享同样的监听地址，所以只需要父进程注册服务 `register_zk()` 即可。
+- 父进程需要设置 SIGCHLD 信号处理函数收割意外退出的子进程，避免僵尸进程。
+- 父进程需要在进程退出之前杀死所有子进程并收割之。
+- 父进程需要在退出时关闭 zk 会话，立即释放临时节点。
+- 父进程需要考虑 waitpid 被其它信号处理函数打断时进行重试。
+- 父进程在杀死子进程时有可能遇到子进程已经提前死掉了，这时会爆出异常需要进行捕获。
+
+#### 客户端
+当服务列表变更时，我们需要将新的服务列表和内存中现有的服务列表进行比对，创建新的连接，关闭旧的连接。
+```python
+        # 新增的地址
+        add_addrs = new_addrs - current_addrs
+        # 删除的地址
+        del_addrs = current_addrs - new_addrs
+        del_servers = []
+```
+详情看 `watch_servers` 方法
 
 ## 运行
 在 CentOS 系统上 执行本章代码。

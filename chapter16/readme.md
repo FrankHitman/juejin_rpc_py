@@ -95,3 +95,13 @@ ZooKeeper 支持临时节点 (ephemeral)，在会话结束时，临时节点会�
 短时间的连接断开并不会立即删除内存会话，而是有个过期时间，时间一到，会话会自动过期。
 可以显式发送会话结束指令强制关闭会话，
 如果客户端进程突然 crash 掉，来不及发送会话关闭指令，ZooKeeper 将通过会话自动过期机制关闭会话。
+
+## 运行
+kazoo 最新版本(2.10.0)已经不支持 Python 2.7， 强制运行会报语法错误。
+根据 [kazoo release notes](https://github.com/python-zk/kazoo/releases)，最后支持 Python 2.7 的是 kazoo 2.7 版本。
+所以在安装 kazoo 时候需要指定版本号。
+```
+sudo pip install kazoo==2.7.0
+```
+
+第16章和第17章最好结合起来阅读，对照16章的解释去看第17章的代码。
