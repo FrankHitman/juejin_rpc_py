@@ -1,35 +1,36 @@
-import sys
-sys.path.append('gen-py')
 import math
+import grpc
+import time
+from concurrent import futures
 
-from thrift.transport import TSocket, TTransport
-from thrift.protocol import TCompactProtocol
-from thrift.server import TServer
-
-from pi.ttypes import PiResponse, IllegalArgument
-from pi.PiService import Iface, Processor
+import pi_pb2
+import pi_pb2_grpc
 
 
-class PiHandler(Iface):
+class PiCalculatorServicer(pi_pb2_grpc.PiCalculatorServicer):
 
-    def calc(self, req):
-        if req.n <= 0:
-            raise IllegalArgument(message="parameter must be positive")
+    def Calc(self, request, ctx):
+        if request.n <= 0:
+            ctx.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            ctx.set_details("request number should be positive")
+            return pi_pb2.PiResponse()
         s = 0.0
-        for i in range(req.n):
+        for i in range(request.n):
             s += 1.0/(2*i+1)/(2*i+1)
-        1/0
-        return PiResponse(value=math.sqrt(8*s))
+        return pi_pb2.PiResponse(value=math.sqrt(8*s))
+
+
+def main():
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    servicer = PiCalculatorServicer()
+    pi_pb2_grpc.add_PiCalculatorServicer_to_server(servicer, server)
+    server.add_insecure_port('localhost:8080')
+    server.start()
+    try:
+        time.sleep(1000)
+    except KeyboardInterrupt:
+        server.stop(0)
 
 
 if __name__ == '__main__':
-    handler = PiHandler()
-    processor = Processor(handler)
-    transport = TSocket.TServerSocket(host="127.0.0.1", port=8888)
-    tfactory = TTransport.TBufferedTransportFactory()
-    pfactory = TCompactProtocol.TCompactProtocolFactory()
-
-    server = TServer.TThreadPoolServer(processor, transport, tfactory, pfactory)
-    server.setNumThreads(10)
-    server.daemon = True
-    server.serve()
+    main()

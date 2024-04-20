@@ -1,23 +1,25 @@
-import sys
-sys.path.append("gen-py")
+import grpc
 
-from thrift.transport import TSocket, TTransport
-from thrift.protocol import TCompactProtocol
+import pi_pb2
+import pi_pb2_grpc
 
-from pi.PiService import Client
-from pi.ttypes import PiRequest, IllegalArgument
+from grpc._cython.cygrpc import CompressionAlgorithm
+from grpc._cython.cygrpc import CompressionLevel
 
-if __name__ == '__main__':
-    sock = TSocket.TSocket("127.0.0.1", 8888)
-    transport = TTransport.TBufferedTransport(sock)
-    protocol = TCompactProtocol.TCompactProtocol(transport)
-    client = Client(protocol)
+chan_ops = [('grpc.default_compression_algorithm', CompressionAlgorithm.gzip),
+            ('grpc.grpc.default_compression_level', CompressionLevel.high)]
 
-    transport.open()
+
+def main():
+    channel = grpc.insecure_channel('localhost:8080', chan_ops)
+    client = pi_pb2_grpc.PiCalculatorStub(channel)
     for i in range(10):
         try:
-            res = client.calc(PiRequest(n=i))
+            res = client.Calc(pi_pb2.PiRequest(n=i))
             print "pi(%d) =" % i, res.value
-        except IllegalArgument as ia:
-            print "pi(%d)" % i, ia.message
-    transport.close()
+        except grpc.RpcError as e:
+            print e.code(), e.details()
+
+
+if __name__ == '__main__':
+    main()
